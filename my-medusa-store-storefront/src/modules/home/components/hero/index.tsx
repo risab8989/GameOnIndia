@@ -1,10 +1,62 @@
-import { Button, Heading } from "@medusajs/ui";
+"use client";
 
-const Hero = () => {
+import { Button, Heading } from "@medusajs/ui";
+import { useEffect, useState } from "react";
+
+const Hero: React.FC = () => {
+  const [gradientPosition, setGradientPosition] = useState<number>(0);
+  const [particlePositions, setParticlePositions] = useState<{ top: string; left: string; duration: string }[]>([]);
+
+  useEffect(() => {
+    // Update gradient angle every 50ms
+    const interval = setInterval(() => {
+      setGradientPosition((prev) => (prev + 1) % 360);
+    }, 50);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    // Generate particles only on the client to prevent hydration issues
+    if (typeof window !== "undefined") {
+      const positions = Array.from({ length: 50 }, () => ({
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        duration: `${Math.random() * 3 + 2}s`,
+      }));
+      setParticlePositions(positions);
+    }
+  }, []);
+
   return (
-    <div className="h-[100vh] w-full border-b border-gray-300 bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 relative flex items-center justify-center text-center">
-      {/* Overlay Effect for Better Visibility */}
-      <div className="absolute inset-0 bg-black bg-opacity-40 z-0"></div>
+    <div className="h-[100vh] w-full border-b border-gray-300 relative flex items-center justify-center text-center overflow-hidden">
+      {/* Animated Background */}
+      <div
+        className="absolute inset-0 animate-gradient"
+        style={{
+          backgroundImage: `linear-gradient(${gradientPosition}deg, #0f172a, #1e293b, #334155)`,
+          backgroundSize: "200% 200%",
+        }}
+      ></div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 flex justify-center items-center">
+        <div className="w-full h-full absolute top-0 left-0">
+          {particlePositions.map((pos, i) => (
+            <span
+              key={i}
+              className="absolute bg-white opacity-30 w-1 h-1 rounded-full animate-float"
+              style={{
+                top: pos.top,
+                left: pos.left,
+                animationDuration: pos.duration,
+              }}
+            ></span>
+          ))}
+        </div>
+      </div>
+
+      {/* Overlay Effect */}
+      <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
 
       <div className="relative z-10 flex flex-col items-center gap-6 p-6">
         {/* Store Name & Tagline */}
@@ -33,6 +85,28 @@ const Hero = () => {
           </Button>
         </a>
       </div>
+
+      {/* CSS Animations */}
+      <style jsx>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .animate-gradient {
+          background-size: 200% 200%;
+          animation: gradientShift 6s infinite linear;
+        }
+
+        @keyframes float {
+          0% { transform: translateY(0); opacity: 0.3; }
+          50% { transform: translateY(-10px); opacity: 0.5; }
+          100% { transform: translateY(0); opacity: 0.3; }
+        }
+        .animate-float {
+          animation: float 4s infinite ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };
