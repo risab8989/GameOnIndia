@@ -21,7 +21,7 @@ export default async function Footer() {
               href="/"
               className="text-2xl font-bold text-gray-900 hover:text-gray-700"
             >
-              Game On India
+              Shop Mitra
             </LocalizedClientLink>
             <p className="text-sm text-gray-600">
               Your Ultimate Sports Destination! 🏆 Play Hard, Shop Smart!
@@ -110,7 +110,7 @@ export default async function Footer() {
 
         {/* Copyright & Medusa CTA */}
         <div className="flex flex-col md:flex-row justify-between items-center mt-10 border-t border-gray-300 pt-6 text-gray-600 text-sm">
-          <Text>© {new Date().getFullYear()} Game On India. All rights reserved.</Text>
+          <Text>© {new Date().getFullYear()} Shop Mitra All rights reserved.</Text>
           <MedusaCTA />
         </div>
       </div>

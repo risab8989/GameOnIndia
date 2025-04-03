@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 
 const Hero: React.FC = () => {
   const [gradientPosition, setGradientPosition] = useState<number>(0);
-  const [particlePositions, setParticlePositions] = useState<{ top: string; left: string; duration: string }[]>([]);
+  const [particlePositions, setParticlePositions] = useState<
+    { top: string; left: string; duration: string; size: string; opacity: string }[]
+  >([]);
 
   useEffect(() => {
     // Update gradient angle every 50ms
@@ -16,12 +18,14 @@ const Hero: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Generate particles only on the client to prevent hydration issues
+    // Generate particles dynamically
     if (typeof window !== "undefined") {
-      const positions = Array.from({ length: 50 }, () => ({
+      const positions = Array.from({ length: 80 }, () => ({
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
         duration: `${Math.random() * 3 + 2}s`,
+        size: `${Math.random() * 2 + 1}px`, // Random size between 1px and 3px
+        opacity: `${Math.random() * 0.5 + 0.3}`, // Random opacity between 0.3 and 0.8
       }));
       setParticlePositions(positions);
     }
@@ -44,10 +48,13 @@ const Hero: React.FC = () => {
           {particlePositions.map((pos, i) => (
             <span
               key={i}
-              className="absolute bg-white opacity-30 w-1 h-1 rounded-full animate-float"
+              className="absolute bg-white rounded-full animate-float"
               style={{
                 top: pos.top,
                 left: pos.left,
+                width: pos.size,
+                height: pos.size,
+                opacity: pos.opacity,
                 animationDuration: pos.duration,
               }}
             ></span>
@@ -65,7 +72,7 @@ const Hero: React.FC = () => {
             level="h1"
             className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg"
           >
-            🏆 Game On India - Your Ultimate Sports Destination!
+            🏆 ShopMitra - Your Ultimate Sports Destination!
           </Heading>
           <Heading
             level="h2"
@@ -76,7 +83,7 @@ const Hero: React.FC = () => {
         </span>
 
         {/* Call-to-Action Button */}
-        <a href="#" target="_blank">
+        <a href="http://localhost:8000/dk/store" >
           <Button
             variant="secondary"
             className="bg-yellow-400 text-black px-6 py-3 rounded-full font-semibold text-lg shadow-md hover:bg-yellow-500 transition-all duration-300"
